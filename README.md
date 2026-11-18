@@ -6,7 +6,7 @@
 
 **Sistema de Sensoriamento Ambiental Distribuído em Microescala Urbana de Baixo Custo**
 
-[![PlatformIO Build](https://github.com/Henrique-Bissoli/OpenAir-AQStation/actions/workflows/build.yml/badge.svg)](https://github.com/Henrique-Bissoli/OpenAir-AQStation/actions/workflows/build.yml)
+[![PlatformIO Build](https://github.com/henrique-1/OpenAir-AQStation/actions/workflows/build.yml/badge.svg)](https://github.com/henrique-1/OpenAir-AQStation/actions/workflows/build.yml)
 [![Placa](https://img.shields.io/badge/Hardware-ESP32%20DOIT%20DevKit%20v1%20(CH9102X)-0f4c5c.svg)](https://www.espressif.com/en/products/socs/esp32)
 [![Framework](https://img.shields.io/badge/Framework-Arduino%20ESP32%20(PlatformIO)-2a9d8f.svg)](https://platformio.org/)
 [![Licença](https://img.shields.io/badge/License-MIT-4da3ff.svg)](LICENSE)
@@ -20,19 +20,19 @@
 
 ---
 
-## 📋 Sumário
-1. [Visão Geral do Projeto](#-visão-geral-do-projeto)
-2. [Arquitetura de Software do Firmware](#-arquitetura-de-software-do-firmware)
-3. [Sensores e Formulações Físico-Matemáticas](#-sensores-e-formulações-físico-matemáticas)
-4. [Esquemático e Pinagem de Hardware](#-esquemático-e-pinagem-de-hardware)
-5. [Compatibilidade de Hardware e Delimitações de Uso](#-compatibilidade-de-hardware-e-delimitações-de-uso)
-6. [Compilação e Gravação](#-compilação-e-gravação)
-7. [Comissionamento em Campo (Captive Portal Offline)](#-comissionamento-em-campo-captive-portal-offline)
-8. [Integração com a Plataforma Web (OpenAir Metrics)](#-integração-com-a-plataforma-web-openair-metrics)
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/list-bullet.svg" width="22" height="22" align="center" alt="Sumário"> Sumário
+1. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/beaker.svg" width="16" height="16" align="center"> [Visão Geral do Projeto](#visão-geral-do-projeto)
+2. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/cog-6-tooth.svg" width="16" height="16" align="center"> [Arquitetura de Software do Firmware](#arquitetura-de-software-do-firmware)
+3. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/chart-bar.svg" width="16" height="16" align="center"> [Sensores e Formulações Físico-Matemáticas](#sensores-e-formulações-físico-matemáticas)
+4. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/cpu-chip.svg" width="16" height="16" align="center"> [Esquemático e Pinagem de Hardware](#esquemático-e-pinagem-de-hardware)
+5. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/exclamation-triangle.svg" width="16" height="16" align="center"> [Compatibilidade de Hardware e Delimitações de Uso](#compatibilidade-de-hardware-e-delimitações-de-uso)
+6. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/rocket-launch.svg" width="16" height="16" align="center"> [Compilação e Gravação](#compilação-e-gravação)
+7. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/device-phone-mobile.svg" width="16" height="16" align="center"> [Comissionamento em Campo (Captive Portal Offline)](#comissionamento-em-campo-captive-portal-offline)
+8. <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/globe-alt.svg" width="16" height="16" align="center"> [Integração com a Plataforma Web (OpenAir Metrics)](#integração-com-a-plataforma-web-openair-metrics)
 
 ---
 
-## 🔬 Visão Geral do Projeto
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/beaker.svg" width="22" height="22" align="center" alt="Visão Geral"> Visão Geral do Projeto
 
 O **OpenAir-AQStation** é a unidade de sensoriamento físico da solução **OpenAir Metrics**. O projeto visa mitigar a baixa densidade espacial das estações meteorológicas oficiais através de nós IoT autônomos, de baixo custo e alta confiabilidade para medição contínua da qualidade do ar em ambientes urbanos.
 
@@ -44,7 +44,7 @@ O **OpenAir-AQStation** é a unidade de sensoriamento físico da solução **Ope
 
 ---
 
-## ⚙️ Arquitetura de Software do Firmware
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/cog-6-tooth.svg" width="22" height="22" align="center" alt="Arquitetura"> Arquitetura de Software do Firmware
 
 O firmware adota uma FSM com três modos operacionais persistidos na partição de **Memória Não-Volátil (NVS)** com mecanismo de *wear-leveling*:
 
@@ -94,7 +94,7 @@ stateDiagram-v2
 
 ---
 
-## 📊 Sensores e Formulações Físico-Matemáticas
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/chart-bar.svg" width="22" height="22" align="center" alt="Sensores"> Sensores e Formulações Físico-Matemáticas
 
 | Sensor | Grandeza Medida | Interface | Faixa Operacional | Resolução / Precisão |
 | :--- | :--- | :--- | :--- | :--- |
@@ -120,7 +120,7 @@ stateDiagram-v2
 
 ---
 
-## 🔌 Esquemático e Pinagem de Hardware
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/cpu-chip.svg" width="22" height="22" align="center" alt="Pinagem"> Esquemático e Pinagem de Hardware
 
 A pinagem foi projetada para garantir compatibilidade eletroeletrônica e isolamento de barramentos internos:
 
@@ -160,26 +160,26 @@ A pinagem foi projetada para garantir compatibilidade eletroeletrônica e isolam
 
 ---
 
-## ⚠️ Compatibilidade de Hardware e Delimitações de Uso
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/exclamation-triangle.svg" width="22" height="22" align="center" alt="Compatibilidade"> Compatibilidade de Hardware e Delimitações de Uso
 
 > [!IMPORTANT]
 > **Modelo de Referência Homologado:**
 > O projeto foi desenvolvido, compilado e validado em campo utilizando o **ESP32 DOIT DevKit v1 com módulo ESP-WROOM-32** e chip conversor USB-Serial **CH9102X** (ou CP2102).
 
-### 🟢 Placas 100% Compatíveis com os Binários Gerados
+### <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/check-circle.svg" width="20" height="20" align="center" alt="Compatível"> Placas 100% Compatíveis com os Binários Gerados
 Os binários compilados pelo repositório ou pelo GitHub Actions funcionam de forma intercambiável em:
 - **ESP32 DOIT DevKit v1** (versões de 30 ou 36 pinos, com CH9102X, CP2102 ou CH340);
 - **ESP32 NodeMCU-32S**;
 - Módulos **ESP-WROOM-32**, **ESP-WROOM-32D** e **ESP-WROOM-32U**;
 - Qualquer placa de desenvolvimento baseada no microcontrolador **Xtensa Dual-Core LX6 clássico (ESP32-D0WDQ6 ou ESP32-D0WD)** com 4 MB de memória Flash.
 
-### 🔴 Placas Incompatíveis (Não Gravar os Binários Padrão)
+### <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/x-circle.svg" width="20" height="20" align="center" alt="Incompatível"> Placas Incompatíveis (Não Gravar os Binários Padrão)
 Não tente gravar os binários `.bin` padrão nestes modelos, pois possuem arquiteturas de processador totalmente diferentes:
 - **ESP32-S2 / ESP32-S3:** Utilizam a arquitetura Xtensa LX7. A tentativa de gravação resultará em erro do *bootloader* ou *boot loop* perpétuo.
 - **ESP32-C3 / ESP32-C6:** Utilizam arquitetura de processador **RISC-V**. O binário compilado para Xtensa LX6 não possui instruções compatíveis.
 - **ESP8266 (NodeMCU ESP-12E):** Não possui o conjunto de instruções, memória RAM, nem os transceptores do rádio ESP-NOW nas mesmas faixas, além de não possuir duas portas seriais UART independentes.
 
-### 🟡 Alerta Especial: ESP32-WROVER (Módulos com PSRAM)
+### <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/exclamation-circle.svg" width="20" height="20" align="center" alt="Alerta"> Alerta Especial: ESP32-WROVER (Módulos com PSRAM)
 Se for utilizar uma placa do modelo **ESP32-WROVER** (que possui chip de memória PSRAM externa de 4MB ou 8MB acoplada):
 - Os pinos **GPIO 16 e GPIO 17** são utilizados **internamente** pelo barramento SPI da PSRAM.
 - Ligar a UART2 do sensor MH-Z19C nos pinos 16 e 17 no WROVER causará *crash* imediato ao tentar ler a memória.
@@ -187,7 +187,7 @@ Se for utilizar uma placa do modelo **ESP32-WROVER** (que possui chip de memóri
 
 ---
 
-## 🚀 Compilação e Gravação
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/rocket-launch.svg" width="22" height="22" align="center" alt="Compilação"> Compilação e Gravação
 
 Você pode gravar a estação de duas maneiras: utilizando os binários prontos gerados pelo GitHub Actions ou compilando o código-fonte localmente via PlatformIO.
 
@@ -221,7 +221,7 @@ Se você for modificar o código, alterar pinos ou adicionar sensores:
 1. Instale o [Visual Studio Code](https://code.visualstudio.com/) e a extensão **PlatformIO IDE**.
 2. Clone o repositório:
    ```bash
-   git clone https://github.com/Henrique-Bissoli/OpenAir-AQStation.git
+   git clone https://github.com/henrique-1/OpenAir-AQStation.git
    cd OpenAir-AQStation
    ```
 3. Compile o projeto:
@@ -239,7 +239,7 @@ Se você for modificar o código, alterar pinos ou adicionar sensores:
 
 ---
 
-## 📱 Comissionamento em Campo (Captive Portal Offline)
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/device-phone-mobile.svg" width="22" height="22" align="center" alt="Comissionamento"> Comissionamento em Campo (Captive Portal Offline)
 
 Toda a interface de configuração opera **100% autônoma** e não depende de internet no smartphone ou no ESP32:
 
@@ -266,7 +266,7 @@ Toda a interface de configuração opera **100% autônoma** e não depende de in
 
 ---
 
-## 🌐 Integração com a Plataforma Web (OpenAir Metrics)
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/globe-alt.svg" width="22" height="22" align="center" alt="Web"> Integração com a Plataforma Web (OpenAir Metrics)
 
 Quando operando em modo Matriz, o firmware despacha requisições HTTP RESTful para a aplicação web em Laravel:
 
@@ -288,7 +288,7 @@ Quando operando em modo Matriz, o firmware despacha requisições HTTP RESTful p
 
 ---
 
-## 📄 Licença e Créditos
+## <img src="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/document-text.svg" width="22" height="22" align="center" alt="Licença"> Licença e Créditos
 
 Este projeto é distribuído sob a licença **MIT**. Consulte o arquivo `LICENSE` para mais informações.
 

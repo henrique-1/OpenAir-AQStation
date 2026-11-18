@@ -454,3 +454,21 @@ O dispositivo opera em 3 estados mutuamente exclusivos:
 #### 3. Testes, Formatação e Compilação (Se aplicável)
 
 - Validação da sintaxe e estrutura de delimitadores `$$` em todos os documentos Markdown do repositório via busca regex.
+
+
+### Sessão: 18 de Novembro de 2026 (Disparo Automático de Releases no GitHub Actions em Push na Main)
+
+#### 1. Resumo Executivo das Entregas (ou da Documentação)
+
+- Diagnosticado o motivo pelo qual a Release não havia sido publicada no GitHub após a execução da Action: o step de publicação estava condicionado estritamente a tags Git (`startsWith(github.ref, 'refs/tags/')`), ignorando pushes diretos na branch `main`.
+- Atualizado o workflow `.github/workflows/build.yml` para disparar a publicação no GitHub Releases automaticamente tanto em pushes para a branch `main` (com versionamento automático `v1.0.<run_number>`) quanto em tags versionadas manuais (`v*`) ou via `workflow_dispatch`.
+- Orientado o usuário sobre a diferença entre GitHub Actions Artifacts e GitHub Releases.
+
+#### 2. Arquivos Modificados e Criados (Se aplicável)
+
+- `.github/workflows/build.yml`: Inclusão de `github.ref == 'refs/heads/main'` na condição de disparo e definição de tag/nome automáticos para releases originadas do branch principal.
+- `.agents/skills/historico.md`: Atualização cumulativa do histórico do projeto.
+
+#### 3. Testes, Formatação e Compilação (Se aplicável)
+
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/build.yml'))"`: Sintaxe YAML validada com sucesso.

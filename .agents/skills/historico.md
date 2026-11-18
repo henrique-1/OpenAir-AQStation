@@ -413,3 +413,44 @@ O dispositivo opera em 3 estados mutuamente exclusivos:
 
 - N/A
 
+
+
+### Sessão: 18 de Novembro de 2026 (Automação de Empacotamento de Artefatos de Firmware para Release via GitHub Actions)
+
+#### 1. Resumo Executivo das Entregas (ou da Documentação)
+
+- Implementada automação completa no workflow do GitHub Actions (`build.yml`) para geração e publicação de pacotes de artefatos de release do firmware ESP32.
+- Desenvolvido o script utilitário `tools/prepare_release.py` para consolidar os binários compilados (`bootloader.bin`, `partitions.bin`, `firmware.bin` e `boot_app0.bin`), produzir a imagem única mesclada `firmware-merged.bin` via `esptool.py merge_bin` (offset 0x0), gerar os scripts de gravação automatizada (`flash.sh` e `flash.bat`), documentação técnica (`INSTRUCOES_GRAVACAO.txt`) e compactação do pacote final `OpenAir-AQStation-ESP32-Release.zip`.
+- Atualizado o workflow `.github/workflows/build.yml` com permissões `contents: write`, suporte a tags Git (`v*`), input manual em `workflow_dispatch` (`create_release`) e integração da action `softprops/action-gh-release@v2` para publicação automática no GitHub Releases junto ao upload como artefato (`actions/upload-artifact@v4`).
+- Adicionadas as entradas `release/` e `*.zip` no `.gitignore` para prevenir inclusão acidental de artefatos locais compilados no controle de versão.
+
+#### 2. Arquivos Modificados e Criados (Se aplicável)
+
+- `.github/workflows/build.yml`: Adicionado suporte a tags `v*`, permissão de escrita de conteúdo, etapa de preparação de artefatos com `tools/prepare_release.py`, upload do pacote de release e publicação em GitHub Releases.
+- `tools/prepare_release.py`: Script Python responsável pela montagem do pacote de release, mesclagem via `esptool`, geração de scripts de flash e empacotamento em ZIP com cálculo de hashes SHA-256.
+- `.gitignore`: Ignoradas as pastas e arquivos gerados localmente (`release/` e `*.zip`).
+- `.agents/skills/historico.md`: Atualização cumulativa do histórico do projeto.
+
+#### 3. Testes, Formatação e Compilação (Se aplicável)
+
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/build.yml'))"`: Validação de sintaxe YAML concluída com sucesso.
+- `python3 tools/prepare_release.py`: Teste de execução local gerando com êxito `firmware-merged.bin` (1.081.808 bytes) e `OpenAir-AQStation-ESP32-Release.zip` (1.353.531 bytes) com validação de SHA-256.
+
+
+### Sessão: 18 de Novembro de 2026 (Correção de Renderização de Fórmulas Matemáticas LaTeX no GitHub)
+
+#### 1. Resumo Executivo das Entregas (ou da Documentação)
+
+- Diagnosticada a falha de renderização das equações matemáticas no GitHub Flavored Markdown (GFM).
+- Identificado que o parser MathJax/KaTeX do GitHub exige estritamente que os delimitadores de bloco `$$` fiquem isolados em linhas próprias e circundados por linhas em branco, além de sofrer inconsistências quando aninhados dentro de itens de lista numerada (`1.`, `2.`).
+- Refatorada a seção de equações em `README.md` e `SECAO_4_5_1_TCC.md` convertendo os itens de lista em subtítulos explícitos (`####`), isolando cada equação em blocos `$$` independentes em linhas exclusivas e ajustando a notação LaTeX ($\text{CO}_2$ e $\text{PM}_{2.5}$) para renderização matemática perfeita no GitHub.
+
+#### 2. Arquivos Modificados e Criados (Se aplicável)
+
+- `README.md`: Reestruturação das equações do MH-Z19C e DSM501A com blocos `$$` em linhas separadas e subtítulos dedicados.
+- `SECAO_4_5_1_TCC.md`: Adequação dos blocos matemáticos ao padrão estrito do GitHub Markdown.
+- `.agents/skills/historico.md`: Registro da sessão no histórico do projeto.
+
+#### 3. Testes, Formatação e Compilação (Se aplicável)
+
+- Validação da sintaxe e estrutura de delimitadores `$$` em todos os documentos Markdown do repositório via busca regex.

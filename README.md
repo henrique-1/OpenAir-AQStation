@@ -102,21 +102,40 @@ stateDiagram-v2
 | **DSM501A** | Material Particulado ($PM_{2.5}$) | Digital ISR (GPIO 33) | 0 a 500 $\mu\text{g/m}^3$ | Espalhamento de Luz (*Light Scattering*) |
 | **DHT22** | Temperatura e Umidade Relativa | Single-Bus (GPIO 26) | $-40\text{ a }80^\circ\text{C}$ / $0\text{ a }100\%$ | $0.1^\circ\text{C}$ / $0.1\%$ RH (Capacitivo) |
 
-### Equações Implementadas no Firmware:
+### Equações Implementadas no Firmware
 
-1. **Validação de Checksum e Saturação de $CO_2$ (MH-Z19C):**
-   $$\text{Checksum Esperado} = \left( 0\text{xFF} - \sum_{i=1}^{7} \text{Byte}[i] \right) + 1$$
-   $$\text{Concentração}_{CO_2} = (\text{Byte}[2] \times 256) + \text{Byte}[3] \quad [\text{ppm}]$$
-   $$\text{Saturação da Ventilação (\%)} = \left( \frac{\text{Concentração}_{CO_2}}{1000\,\text{ppm}} \right) \times 100 \quad \text{(Ref: ANVISA RE nº 09/2003)}$$
+#### 1. Validação de Checksum e Saturação de $\text{CO}_2$ (MH-Z19C)
 
-2. **Razão de Ocupação em Nível Baixo (LPO) e Concentração $PM_{2.5}$ (DSM501A):**
-   $$\text{Ratio}_{\text{LPO}} = \left( \frac{\Delta t_{\text{Low}}}{\Delta T_{\text{Janela}}} \right) \times 100 \quad (\Delta T_{\text{Janela}} = 30000\,\text{ms})$$
-   $$N_p = 1{,}1 \cdot (\text{Ratio}_{\text{LPO}})^3 - 3{,}8 \cdot (\text{Ratio}_{\text{LPO}})^2 + 520{,}0 \cdot (\text{Ratio}_{\text{LPO}}) + 0{,}62 \quad [\text{pcs} / 0{,}01\text{ cf}]$$
-   $$\text{PM}_{2.5}\,(\mu\text{g/m}^3) = N_p \times 3531{,}5 \times (5{,}8875 \times 10^{-7})$$
+$$
+\text{Checksum Esperado} = \left( 0\text{xFF} - \sum_{i=1}^{7} \text{Byte}[i] \right) + 1
+$$
 
-3. **Validação Sanitária do DHT22:**
-   - Amostragem temporizada com intervalo mínimo garantido de $2500\,\text{ms}$.
-   - Verificação de sanidade para descartar leituras espúrias `NaN` e limites físicos fora da escala operacional.
+$$
+\text{Concentração}_{\text{CO}_2} = (\text{Byte}[2] \times 256) + \text{Byte}[3] \quad [\text{ppm}]
+$$
+
+$$
+\text{Saturação da Ventilação (\%)} = \left( \frac{\text{Concentração}_{\text{CO}_2}}{1000\,\text{ppm}} \right) \times 100 \quad \text{(Ref: ANVISA RE nº 09/2003)}
+$$
+
+#### 2. Razão de Ocupação em Nível Baixo (LPO) e Concentração $\text{PM}_{2.5}$ (DSM501A)
+
+$$
+\text{Ratio}_{\text{LPO}} = \left( \frac{\Delta t_{\text{Low}}}{\Delta T_{\text{Janela}}} \right) \times 100 \quad (\Delta T_{\text{Janela}} = 30000\,\text{ms})
+$$
+
+$$
+N_p = 1{,}1 \cdot (\text{Ratio}_{\text{LPO}})^3 - 3{,}8 \cdot (\text{Ratio}_{\text{LPO}})^2 + 520{,}0 \cdot (\text{Ratio}_{\text{LPO}}) + 0{,}62 \quad [\text{pcs} / 0{,}01\,\text{cf}]
+$$
+
+$$
+\text{PM}_{2.5}\,(\mu\text{g/m}^3) = N_p \times 3531{,}5 \times (5{,}8875 \times 10^{-7})
+$$
+
+#### 3. Validação Sanitária do DHT22
+
+- Amostragem temporizada com intervalo mínimo garantido de $2500\,\text{ms}$.
+- Verificação de sanidade para descartar leituras espúrias `NaN` e limites físicos fora da escala operacional.
 
 ---
 

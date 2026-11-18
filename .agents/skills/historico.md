@@ -472,3 +472,25 @@ O dispositivo opera em 3 estados mutuamente exclusivos:
 #### 3. Testes, Formatação e Compilação (Se aplicável)
 
 - `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/build.yml'))"`: Sintaxe YAML validada com sucesso.
+
+
+### Sessão: 18 de Novembro de 2026 (Personalização do Corpo da Release com Heroicons, Histórico de Commits e Guia de Gravação)
+
+#### 1. Resumo Executivo das Entregas (ou da Documentação)
+
+- Atualizado o gerador de artefatos de release (`tools/prepare_release.py`) para produzir dinamicamente o arquivo `release/RELEASE_NOTES.md`.
+- Integrada a extração automática dos commits geradores da release via `git log`, mapeando hash curto vinculado à URL no GitHub, descrição, autor e data.
+- Embutidas as instruções completas de gravação físico-eletrônica para Linux, macOS e Windows (métodos consolidado `firmware-merged.bin` e modular `esptool`), além de tabela de verificação de integridade SHA-256 e tamanho de cada artefato.
+- Padronizada a identidade visual das notas de release utilizando estritamente Heroicons oficiais (SVG inline via tags `<img>` otimizadas), sem uso de emojis convencionais.
+- Atualizado o workflow `.github/workflows/build.yml` com `fetch-depth: 0` para histórico Git completo e passagem de `body_path: release/RELEASE_NOTES.md` para a action `softprops/action-gh-release@v2`.
+
+#### 2. Arquivos Modificados e Criados (Se aplicável)
+
+- `tools/prepare_release.py`: Implementadas as funções `get_release_commits()` e `generate_release_notes()` formatando o corpo da release com Heroicons, commits e instruções.
+- `.github/workflows/build.yml`: Configurado `fetch-depth: 0` no checkout e `body_path: release/RELEASE_NOTES.md` no step de publicação.
+- `.agents/skills/historico.md`: Registro da sessão no histórico cumulativo.
+
+#### 3. Testes, Formatação e Compilação (Se aplicável)
+
+- `python3 tools/prepare_release.py`: Execução com geração validada de `release/RELEASE_NOTES.md` contendo commits reais e tabela de artefatos.
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/build.yml'))"`: Validação da sintaxe YAML do workflow.

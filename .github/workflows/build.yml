@@ -1,0 +1,49 @@
+name: Build PlatformIO Firmware (ESP32 DOIT DevKit v1)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compilar Firmware ESP32 DOIT DevKit (CH9102X / WROOM-32)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Instalar PlatformIO CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio
+
+      - name: Cache de Dependências PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-platformio-${{ hashFiles('**/platformio.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-platformio-
+
+      - name: Compilar Firmware
+        run: pio run -e esp32doit-devkit-v1
+
+      - name: Publicar Binários Compilados
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenAir-AQStation-Firmware-ESP32
+          path: |
+            .pio/build/esp32doit-devkit-v1/firmware.bin
+            .pio/build/esp32doit-devkit-v1/bootloader.bin
+            .pio/build/esp32doit-devkit-v1/partitions.bin
+          if-no-files-found: error

@@ -39,7 +39,6 @@ private:
     void handleRoot();
     void handleSave();
     void handleScan();
-    void handleImageIcon();
     void handleImageLogo();
     void handleNotFound();
 

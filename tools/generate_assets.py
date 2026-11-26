@@ -35,12 +35,7 @@ def bytes_to_c_array(data, name):
 def main():
     print("Otimizando imagens para o ESP32...")
 
-    # Ícone (1.png / 1.webp): display 48x48 -> 96x96 (2x retina)
-    icon_src = os.path.join(IMAGES_DIR, "1.png") if os.path.exists(os.path.join(IMAGES_DIR, "1.png")) else os.path.join(IMAGES_DIR, "1.webp")
-    icon_webp = resize_image(icon_src, 96, 96, 'WEBP', quality=85)
-    print(f"Ícone WebP: {len(icon_webp)} bytes")
-
-    # Logo horizontal (3.webp): display 220x38 -> 384x128
+    # Logo horizontal (3.webp): display 240x44 -> 384x128
     logo_src = os.path.join(IMAGES_DIR, "3.webp") if os.path.exists(os.path.join(IMAGES_DIR, "3.webp")) else os.path.join(IMAGES_DIR, "3.png")
     with open(logo_src, "rb") as f:
         logo_data = f.read()
@@ -52,7 +47,7 @@ def main():
         logo_webp = logo_data
     print(f"Logo WebP: {len(logo_webp)} bytes")
 
-    total_bytes = len(icon_webp) + len(logo_webp)
+    total_bytes = len(logo_webp)
     print(f"Total de assets em Flash: {total_bytes} bytes (~{total_bytes/1024:.1f} KB)")
 
     header_content = f"""#ifndef PORTAL_IMAGES_H
@@ -66,7 +61,6 @@ def main():
 // Total: {total_bytes} bytes (~{total_bytes/1024:.1f} KB)
 // =============================================================================
 
-{bytes_to_c_array(icon_webp, "IMAGE_ICON_WEBP")}
 {bytes_to_c_array(logo_webp, "IMAGE_LOGO_WEBP")}
 
 #endif // PORTAL_IMAGES_H

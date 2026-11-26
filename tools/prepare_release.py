@@ -71,7 +71,7 @@ PRÓXIMOS PASSOS APÓS A GRAVAÇÃO:
    pio device monitor -b 115200
 2. Conecte-se ao Wi-Fi criado pela placa:
    SSID:  OpenAir-Station-XXXX (onde XXXX são os últimos dígitos do MAC)
-   Senha: openair123
+   Rede aberta (sem senha)
 3. Acesse http://192.168.4.1 no navegador para configurar a rede e o papel
    da estação (Matriz ou Satélite).
 ================================================================================
@@ -252,8 +252,7 @@ esptool.py --chip esp32 --port <PORTA> --baud 921600 write_flash \\
    pio device monitor -b 115200
    ```
 2. Conecte-se ao Wi-Fi emitido pela placa:
-   - **SSID:** `OpenAir-Station-XXXX` (onde XXXX são os últimos 4 dígitos do MAC)
-   - **Senha:** `openair123`
+   - **SSID:** `OpenAir-Station-XXXX` (onde XXXX são os últimos 4 dígitos do MAC) — rede aberta (sem senha)
 3. Acesse `http://192.168.4.1` no navegador para configurar a rede Wi-Fi e definir o papel da estação (**Matriz** ou **Satélite**).
 
 ---

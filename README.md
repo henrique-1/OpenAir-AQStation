@@ -274,7 +274,7 @@ Toda a interface de configuração opera **100% autônoma** e não depende de in
 ```
 
 1. Ligue a estação. Se ela estiver desconfigurada, o LED onboard piscará a cada 500ms e uma rede Wi-Fi aberta chamada `OpenAir-Station-XXXX` será emitida.
-2. Conecte seu smartphone ou computador a essa rede (senha padrão: `openair123`).
+2. Conecte seu smartphone ou computador a essa rede (rede aberta, sem senha).
 3. Uma notificação de "Fazer login na rede" será disparada no dispositivo móvel, abrindo a página de configuração automaticamente. Caso não abra, acesse `http://192.168.4.1/`.
 4. Escolha a função da estação:
    - **Satélite:** Digite o MAC Address de destino do nó concentrador (a máscara `AA:BB:CC:DD:EE:FF` é aplicada automaticamente).

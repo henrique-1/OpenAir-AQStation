@@ -41,8 +41,7 @@ enum SystemMode : uint8_t {
 #define RESET_BUTTON_HOLD_MS    3000   // Segurar botão BOOT por 3s para resetar NVS
 #define DEFAULT_SAMPLE_SEC      30     // Janela padrão de amostragem (ideal para o DSM501A LPO)
 #define DEFAULT_AP_SSID_PREFIX  "OpenAir-Station-"
-#define DEFAULT_AP_PASSWORD     "openair123"
-#define DEFAULT_SERVER_URL      "http://api.openair-metrics.gov.br/api/medicoes"
+#define DEFAULT_SERVER_URL      "https://openair.bissoli.tech/api/medicoes"
 #define DEFAULT_HTTP_TIMEOUT_MS 5000   // Timeout para requisição HTTP ao Laravel
 
 // =============================================================================

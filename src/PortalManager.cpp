@@ -143,21 +143,12 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
             margin-bottom: 12px;
         }
 
-        .brand-icon {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-            border-radius: 10px;
-            filter: drop-shadow(0 2px 4px rgba(15, 76, 92, 0.15));
-        }
-
         .brand-logo {
-            height: 38px;
-            max-width: 220px;
+            height: 44px;
+            max-width: 240px;
             object-fit: contain;
         }
 
@@ -307,6 +298,43 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
             color: var(--athens-gray-500);
             margin-top: 4px;
             display: block;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            padding-right: 42px;
+        }
+
+        .btn-toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--athens-gray-500);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .btn-toggle-password:hover {
+            color: var(--blue-dianne-900);
+            background: var(--athens-gray-100);
+        }
+
+        .btn-toggle-password svg {
+            width: 18px;
+            height: 18px;
         }
 
         /* Componente Dinâmico de Scan Wi-Fi */
@@ -535,8 +563,6 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
         <div class="brand-header">
             
             <div class="brand-images">
-                <!-- Ícone da Marca (WebP com fallback local) -->
-                <img src="/images/1.webp" alt="Ícone OpenAir" class="brand-icon" onerror="this.onerror=null; this.src='./images/1.webp';">
                 <!-- Imagem do Projeto (Logo Horizontal) -->
                 <img src="/images/3.webp" alt="OpenAir" class="brand-logo" onerror="this.onerror=null; this.src='./images/3.webp';">
             </div>
@@ -623,7 +649,15 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
 
                 <div class="input-group">
                     <label for="password">Senha da Rede Wi-Fi:</label>
-                    <input type="password" id="password" name="password" placeholder="Digite a senha da rede" maxlength="64">
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Digite a senha da rede" maxlength="64">
+                        <button type="button" class="btn-toggle-password" id="btn-toggle-password" onclick="togglePasswordVisibility()" aria-label="Mostrar senha" title="Mostrar ou ocultar senha">
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                        </button>
+                    </div>
                     <span class="input-hint" id="password-hint">Deixe em branco se a rede for aberta.</span>
                 </div>
 
@@ -636,7 +670,7 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
                     <label for="url">URL do Endpoint da API:</label>
                     <input type="text" id="url" name="url" 
                            value="%SERVER_URL%" 
-                           placeholder="https://openair.bissoli.tech/api/medicoes" 
+                           placeholder="Digite a URL do site (ex: https://seusite.com/api/medicoes)" 
                            maxlength="120">
                 </div>
             </div>
@@ -728,40 +762,67 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
             </svg>`;
         }
 
-        // Executa busca de redes (Simulação local ou endpoint real /scan do ESP32)
+        let scanPollTimer = null;
+
+        // Executa busca de redes (Simulação local ou endpoint real /scan assíncrono do ESP32)
         function scanWifiNetworks() {
             const btn = document.getElementById('btn-scan-wifi');
             const scanText = document.getElementById('scan-text');
+            if (scanPollTimer) {
+                clearTimeout(scanPollTimer);
+                scanPollTimer = null;
+            }
             btn.classList.add('scanning');
             scanText.textContent = "Buscando...";
 
-            // Se estiver em ambiente real do ESP32 (HTTP), tenta buscar /scan
+            function finishScan() {
+                if (scanPollTimer) {
+                    clearTimeout(scanPollTimer);
+                    scanPollTimer = null;
+                }
+                btn.classList.remove('scanning');
+                scanText.textContent = "Buscar Redes";
+            }
+
+            // Se estiver em ambiente real do ESP32 (HTTP), usa /scan assíncrono com polling
             if (window.location.protocol.startsWith('http') && !window.location.pathname.endsWith('portal_preview.html')) {
-                fetch('/scan')
-                    .then(r => {
-                        if (!r.ok) throw new Error("HTTP " + r.status);
-                        return r.json();
-                    })
-                    .then(data => {
-                        scannedNetworks = Array.isArray(data) ? data : [];
-                        renderWifiMenu();
-                    })
-                    .catch(err => {
-                        console.warn("Scan endpoint indisponível:", err);
-                        loadMockNetworks();
-                    })
-                    .finally(finishScan);
+                let attempts = 0;
+                const maxAttempts = 25;
+
+                function pollScan() {
+                    fetch('/scan')
+                        .then(r => {
+                            if (r.status === 202) {
+                                if (++attempts < maxAttempts) {
+                                    scanPollTimer = setTimeout(pollScan, 400);
+                                } else {
+                                    finishScan();
+                                }
+                                return null;
+                            }
+                            if (!r.ok) throw new Error("HTTP " + r.status);
+                            return r.json();
+                        })
+                        .then(data => {
+                            if (data === null) return;
+                            scannedNetworks = Array.isArray(data) ? data : [];
+                            renderWifiMenu();
+                            finishScan();
+                        })
+                        .catch(err => {
+                            console.warn("Scan endpoint indisponível:", err);
+                            loadMockNetworks();
+                            finishScan();
+                        });
+                }
+
+                pollScan();
             } else {
                 // Simulação local realista para testes no PC
                 setTimeout(() => {
                     loadMockNetworks();
                     finishScan();
                 }, 800);
-            }
-
-            function finishScan() {
-                btn.classList.remove('scanning');
-                scanText.textContent = "Buscar Redes";
             }
         }
 
@@ -885,6 +946,19 @@ static const char PORTAL_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
             document.getElementById('ssid').value = val;
         }
 
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('password');
+            const toggleBtn = document.getElementById('btn-toggle-password');
+            const eyeIcon = document.getElementById('eye-icon');
+            const isHidden = passInput.type === 'password';
+
+            passInput.type = isHidden ? 'text' : 'password';
+            toggleBtn.setAttribute('aria-label', isHidden ? 'Ocultar senha' : 'Mostrar senha');
+            eyeIcon.innerHTML = isHidden
+                ? '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />'
+                : '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />';
+        }
+
         // Fecha o dropdown se clicar fora
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('wifi-dropdown');
@@ -964,7 +1038,7 @@ void PortalManager::begin() {
     esp_wifi_get_mac(WIFI_IF_AP, mac);
     snprintf(apSsid, sizeof(apSsid), "%s%02X%02X", DEFAULT_AP_SSID_PREFIX, mac[4], mac[5]);
 
-    WiFi.softAP(apSsid, DEFAULT_AP_PASSWORD);
+    WiFi.softAP(apSsid);
 
     IPAddress apIP = WiFi.softAPIP();
 
@@ -1005,9 +1079,7 @@ void PortalManager::setupRoutes() {
     _server.on("/scan", HTTP_GET, [this]() { handleScan(); });
 
     // Assets de Imagem estáticos em PROGMEM
-    _server.on("/images/1.webp", HTTP_GET, [this]() { handleImageIcon(); });
     _server.on("/images/3.webp", HTTP_GET, [this]() { handleImageLogo(); });
-    _server.on("/images/1.png", HTTP_GET, [this]() { handleImageIcon(); });
     _server.on("/images/3.png", HTTP_GET, [this]() { handleImageLogo(); });
 
     // Endpoints de detecção de Captive Portal
@@ -1028,19 +1100,27 @@ void PortalManager::handleRoot() {
     _server.send(200, "text/html", buildHtmlPage());
 }
 
-void PortalManager::handleImageIcon() {
-    _server.sendHeader("Cache-Control", "public, max-age=86400");
-    _server.send_P(200, "image/webp", (const char*)IMAGE_ICON_WEBP, IMAGE_ICON_WEBP_LEN);
-}
-
 void PortalManager::handleImageLogo() {
     _server.sendHeader("Cache-Control", "public, max-age=86400");
     _server.send_P(200, "image/webp", (const char*)IMAGE_LOGO_WEBP, IMAGE_LOGO_WEBP_LEN);
 }
 
 void PortalManager::handleScan() {
-    Serial.println("[PORTAL] Escaneando redes Wi-Fi...");
-    int16_t n = WiFi.scanNetworks(false, true);
+    int16_t n = WiFi.scanComplete();
+
+    if (n == WIFI_SCAN_FAILED) {
+        Serial.println("[PORTAL] Iniciando scan assincrono de redes Wi-Fi...");
+        WiFi.scanNetworks(true, false);
+        _server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        _server.send(202, "application/json", "{\"status\":\"scanning\"}");
+        return;
+    }
+
+    if (n == WIFI_SCAN_RUNNING) {
+        _server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        _server.send(202, "application/json", "{\"status\":\"scanning\"}");
+        return;
+    }
 
     JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();

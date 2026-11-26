@@ -111,7 +111,7 @@ void PortalManager::begin() {{
     esp_wifi_get_mac(WIFI_IF_AP, mac);
     snprintf(apSsid, sizeof(apSsid), "%s%02X%02X", DEFAULT_AP_SSID_PREFIX, mac[4], mac[5]);
 
-    WiFi.softAP(apSsid, DEFAULT_AP_PASSWORD);
+    WiFi.softAP(apSsid);
 
     IPAddress apIP = WiFi.softAPIP();
 
@@ -152,9 +152,7 @@ void PortalManager::setupRoutes() {{
     _server.on("/scan", HTTP_GET, [this]() {{ handleScan(); }});
 
     // Assets de Imagem estáticos em PROGMEM
-    _server.on("/images/1.webp", HTTP_GET, [this]() {{ handleImageIcon(); }});
     _server.on("/images/3.webp", HTTP_GET, [this]() {{ handleImageLogo(); }});
-    _server.on("/images/1.png", HTTP_GET, [this]() {{ handleImageIcon(); }});
     _server.on("/images/3.png", HTTP_GET, [this]() {{ handleImageLogo(); }});
 
     // Endpoints de detecção de Captive Portal
@@ -175,19 +173,27 @@ void PortalManager::handleRoot() {{
     _server.send(200, "text/html", buildHtmlPage());
 }}
 
-void PortalManager::handleImageIcon() {{
-    _server.sendHeader("Cache-Control", "public, max-age=86400");
-    _server.send_P(200, "image/webp", (const char*)IMAGE_ICON_WEBP, IMAGE_ICON_WEBP_LEN);
-}}
-
 void PortalManager::handleImageLogo() {{
     _server.sendHeader("Cache-Control", "public, max-age=86400");
     _server.send_P(200, "image/webp", (const char*)IMAGE_LOGO_WEBP, IMAGE_LOGO_WEBP_LEN);
 }}
 
 void PortalManager::handleScan() {{
-    Serial.println("[PORTAL] Escaneando redes Wi-Fi...");
-    int16_t n = WiFi.scanNetworks(false, true);
+    int16_t n = WiFi.scanComplete();
+
+    if (n == WIFI_SCAN_FAILED) {{
+        Serial.println("[PORTAL] Iniciando scan assincrono de redes Wi-Fi...");
+        WiFi.scanNetworks(true, false);
+        _server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        _server.send(202, "application/json", "{{\\"status\\":\\"scanning\\"}}");
+        return;
+    }}
+
+    if (n == WIFI_SCAN_RUNNING) {{
+        _server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        _server.send(202, "application/json", "{{\\"status\\":\\"scanning\\"}}");
+        return;
+    }}
 
     JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();
